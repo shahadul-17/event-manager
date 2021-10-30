@@ -1,7 +1,7 @@
 {
   "name": "@shahadul-17/event-manager",
-  "version": "0.0.1",
-  "description": "Event manager is used for adding, removing and/or firing event listeners.",
+  "version": "0.0.2",
+  "description": "Event manager is used for adding, removing and/or dispatching event listeners.",
   "author": "Md. Shahadul Alam Patwary",
   "license": "MIT",
   "main": "dist/index.js",
@@ -10,7 +10,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p ."
+    "clean": "tsc --build --clean",
+    "build": "tsc --build"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,8 @@
     "event",
     "manager",
     "listener",
-    "handler"
+    "handler",
+    "dispatcher"
   ],
   "bugs": {
     "url": "https://github.com/shahadul-17/event-manager/issues"
