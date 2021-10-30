@@ -1,6 +1,6 @@
 {
   "name": "@shahadul-17/event-manager",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Event manager is used for adding, removing and/or dispatching event listeners.",
   "author": "Md. Shahadul Alam Patwary",
   "license": "MIT",

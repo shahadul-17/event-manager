@@ -28,4 +28,13 @@ export interface IEventManager {
    * @param type (Optional) Type of event listeners to remove.
    */
   removeEventListeners(type?: string): void;
+
+  /**
+   * Copies event listeners from one event manager to another.
+   * @param eventManager Event manager from which the listeners should be copied.
+   * @param type (Optional) Type of the event listeners that should be copied.
+   * @returns Returns false if any of the event listeners failed to be copied.
+   * Otherwise returns true.
+   */
+  copyEventListeners(eventManager: IEventManager, type?: string): boolean;
 }

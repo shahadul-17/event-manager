@@ -125,4 +125,25 @@ export class EventManager implements IEventManager {
     // otherwise we remove all event listeners...
     this._eventListeners = {};
   }
+
+  copyEventListeners(eventManager: IEventManager, type?: string): boolean {
+    if (!(eventManager instanceof EventManager)) { return false; }
+
+    let isCopied = true;
+    const types = type ? [type] : eventManager._getEventListenerTypes();
+
+    for (const _type of types) {
+      const listeners = eventManager._getEventListeners(_type);
+
+      if (!listeners) { continue; }
+
+      for (const listener of listeners) {
+        if (!this.addEventListener(_type, listener)) {
+          isCopied = false;
+        }
+      }
+    }
+
+    return isCopied;
+  }
 }
