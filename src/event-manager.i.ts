@@ -1,6 +1,9 @@
+import { IEventArguments } from './event-arguments.i';
 import { EventListener } from './event-listener.t';
 
-export interface IEventManager {
+export interface IEventManager<EventType extends string = string,
+  ArgumentsType extends IEventArguments<EventType>
+  = IEventArguments<EventType>> {
 
   /**
    * Adds the specified event listener.
@@ -9,7 +12,7 @@ export interface IEventManager {
    * @returns Returns true if event listener is successfully
    * added. Otherwise returns false.
    */
-  addEventListener(type: string, listener: EventListener): boolean;
+  addEventListener(type: EventType, listener: EventListener<EventType, ArgumentsType>): boolean;
 
   /**
    * Removes the specified event listener.
@@ -20,14 +23,14 @@ export interface IEventManager {
    * @returns Returns true if event listener is successfully
    * removed. Otherwise returns false.
    */
-  removeEventListener(listener: EventListener, type?: string, removeAll?: boolean): boolean;
+  removeEventListener(listener: EventListener<EventType, ArgumentsType>, type?: EventType, removeAll?: boolean): boolean;
 
   /**
    * Removes event listeners of the specified type. If type
    * is not provided, removes all event listeners.
    * @param type (Optional) Type of event listeners to remove.
    */
-  removeEventListeners(type?: string): void;
+  removeEventListeners(type?: EventType): void;
 
   /**
    * Copies event listeners from one event manager to another.
@@ -36,5 +39,5 @@ export interface IEventManager {
    * @returns Returns false if any of the event listeners failed to be copied.
    * Otherwise returns true.
    */
-  copyEventListeners(eventManager: IEventManager, type?: string): boolean;
+  copyEventListeners(eventManager: IEventManager<EventType, ArgumentsType>, type?: EventType): boolean;
 }

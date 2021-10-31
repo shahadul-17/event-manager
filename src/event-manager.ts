@@ -2,16 +2,18 @@ import { IEventArguments } from "./event-arguments.i";
 import { EventListener } from "./event-listener.t";
 import { IEventManager } from "./event-manager.i";
 
-export class EventManager implements IEventManager {
+export class EventManager<EventType extends string = string,
+  ArgumentsType extends IEventArguments<EventType> = IEventArguments<EventType>>
+  implements IEventManager<EventType, ArgumentsType> {
 
-  private _eventListeners: Record<string, undefined | EventListener[]> = {};
+  private _eventListeners: Record<string, undefined | EventListener<EventType, ArgumentsType>[]> = {};
 
   /**
    * This method returns all the event listener types.
-   * @returns Returns an array of strings containing all event listener types.
+   * @returns Returns an array containing all event listener types.
    */
-  private _getEventListenerTypes(): string[] {
-    return Object.keys(this._eventListeners);
+  private _getEventListenerTypes(): EventType[] {
+    return Object.keys(this._eventListeners) as EventType[];
   }
 
   /**
@@ -23,7 +25,7 @@ export class EventManager implements IEventManager {
    * @returns Returns event listeners if available. Otherwise returns
    * 'undefined'.
    */
-  private _getEventListeners(type: string, createIfNotDefined = false): undefined | EventListener[] {
+  private _getEventListeners(type: EventType, createIfNotDefined = false): undefined | EventListener<EventType, ArgumentsType>[] {
     let eventListeners = this._eventListeners[type];
 
     if (createIfNotDefined && !eventListeners) {
@@ -42,7 +44,7 @@ export class EventManager implements IEventManager {
    * Otherwise returns false.
    * @see {@link fireEventListeners}
    */
-  protected dispatchEventListeners(eventArguments: IEventArguments): boolean {
+  protected dispatchEventListeners(eventArguments: ArgumentsType): boolean {
     const listeners = this._getEventListeners(eventArguments.type);
 
     // Returns false if no listeners are available...
@@ -74,21 +76,21 @@ export class EventManager implements IEventManager {
    * Otherwise returns false.
    * @see {@link dispatchEventListeners}
    */
-  protected fireEventListeners(eventArguments: IEventArguments): boolean {
+  protected fireEventListeners(eventArguments: ArgumentsType): boolean {
     return this.dispatchEventListeners(eventArguments);
   }
 
-  addEventListener(type: string, listener: EventListener): boolean {
+  addEventListener(type: EventType, listener: EventListener<EventType, ArgumentsType>): boolean {
     if (typeof listener !== "function") { return false; }
 
-    const listeners = this._getEventListeners(type, true) as EventListener[];
+    const listeners = this._getEventListeners(type, true) as EventListener<EventType, ArgumentsType>[];
 
     listeners.push(listener);
 
     return true;
   }
 
-  removeEventListener(listener: EventListener, type?: string, removeAll = false): boolean {
+  removeEventListener(listener: EventListener<EventType, ArgumentsType>, type?: EventType, removeAll = false): boolean {
     if (typeof listener !== "function") { return false; }
 
     let isRemoved = false;
@@ -113,7 +115,7 @@ export class EventManager implements IEventManager {
     return isRemoved;
   }
 
-  removeEventListeners(type?: string): void {
+  removeEventListeners(type?: EventType): void {
     // if type is provided, we clear
     // event listeners of the specified type...
     if (type) {
@@ -126,7 +128,7 @@ export class EventManager implements IEventManager {
     this._eventListeners = {};
   }
 
-  copyEventListeners(eventManager: IEventManager, type?: string): boolean {
+  copyEventListeners(eventManager: IEventManager<EventType, ArgumentsType>, type?: EventType): boolean {
     if (!(eventManager instanceof EventManager)) { return false; }
 
     let isCopied = true;

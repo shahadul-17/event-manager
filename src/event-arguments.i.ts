@@ -1,4 +1,4 @@
-export interface IEventArguments
+export interface IEventArguments<EventType extends string = string>
     extends Record<string, any>  {
-  type: string;
+  type: EventType;
 }
